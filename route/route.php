@@ -18,3 +18,7 @@
 // return [
 
 // ];
+
+// Route::post('api/:v.user/sendcode','api/v1.UserController/sendCode');
+// 发送验证码
+Route::post('user/sendcode','api/v1.UserController/sendCode');
