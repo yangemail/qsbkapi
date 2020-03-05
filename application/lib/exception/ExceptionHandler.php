@@ -12,7 +12,6 @@ class ExceptionHandler extends Handle {
 
     // 自定义类需要继承think\exception\Handle并且实现render方法
     public function render(Exception $e){
-        // halt($e);
 
         if($e instanceof BaseException) {
             $this->code = $e->code;
