@@ -19,7 +19,7 @@ class Index extends Controller
     // 账号密码登录
     public function index()
     {
-        (new CeshiValidate())->goCheck();
+        (new CeshiValidate())->goCheck('login');
 
         return 111;
     }
