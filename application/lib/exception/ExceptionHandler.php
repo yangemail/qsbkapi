@@ -19,6 +19,11 @@ class ExceptionHandler extends Handle {
             $this->msg = $e->msg;
             $this->errorCode = $e->errorCode;
         } else {
+            // app.app_debug开启，显示默认的异常
+            if(config('app.app_debug')) {
+                return parent::render($e);
+            }
+
             $this->code = 500;
             $this->msg = '服务器异常';
             $this->errorCode = 999;

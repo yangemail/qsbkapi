@@ -9,7 +9,6 @@ class BaseException extends Exception {
     public $errorCode = 999;
 
     public function __construct($params = []){
-        // halt($params);
         if(!is_array($params)) {
             return;
         }

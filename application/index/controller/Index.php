@@ -6,6 +6,7 @@ use think\Controller;
 use think\Request;
 
 use app\lib\exception\BaseException;
+use app\common\validate\CeshiValidate;
 
 
 class Index extends Controller
@@ -15,11 +16,12 @@ class Index extends Controller
      *
      * @return \think\Response
      */
+    // 账号密码登录
     public function index()
     {
-        // throw new BaseException(['msg'=>'验证失败']);
+        (new CeshiValidate())->goCheck();
 
-        return 1/0;
+        return 111;
     }
 
    
