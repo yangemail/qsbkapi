@@ -13,8 +13,10 @@ class UserController extends BaseController
 {
     // 发送验证码
     public function sendCode() {
+        
         // 验证参数
         (new UserValidate())->goCheck('sendCode');
+        
         // 发送验证码
         (new UserModel())->sendCode();
 

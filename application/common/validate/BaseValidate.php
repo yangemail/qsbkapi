@@ -12,9 +12,19 @@ class BaseValidate extends Validate {
         $params = request()->param();
 
         // 开始验证
-        $check = empty($scene) ? $this->check($params) : $this->scene($scene)->check($params);
-        if(!$check) {
-            throw new BaseException(['msg'=>$this->getError(), 'errorCode'=>10000, 'code'=>400]);
+        // $result为局部变量，仅能在函数内部使用
+        if(empty($scene)) {
+            $result = $this->check($params);
+        } else {
+            $result = $this->scene($scene)->check($params);
+        }
+        // $result = empty($scene) ? $this->check($params) : $this->scene($scene)->check($params);
+        if(!$result) {
+            throw new BaseException([
+                'msg'=>$this->getError(), 
+                'errorCode'=>10000, 
+                'code'=>400
+                ]);
         }
         return true;
     }

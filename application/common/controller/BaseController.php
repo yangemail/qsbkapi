@@ -12,10 +12,10 @@ class BaseController extends Controller
         $res = ['msg'=>$msg, 'data'=>$data];
         return json($res, $code);
     }
-
+    
     // API统一返回格式无数据
     static public function showResCodeWithoutData($msg='未知', $code=200) {
         return self::showResCode($msg, [], $code);
     }
-
+    
 }

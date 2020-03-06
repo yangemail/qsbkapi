@@ -20,5 +20,5 @@
 // ];
 
 // Route::post('api/:v.user/sendcode','api/v1.UserController/sendCode');
-// 发送验证码
+// 发送验证码：post请求
 Route::post('user/sendcode','api/v1.UserController/sendCode');
