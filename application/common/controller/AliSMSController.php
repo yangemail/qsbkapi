@@ -27,7 +27,7 @@ class AliSMSController
                 'PhoneNumbers' => $phone,
                 'SignName' => config('api.aliSMS.SignName'),
                 'TemplateCode' => config('api.aliSMS.TemplateCode'),
-                'TemplateParam' => "{\"code\":".$code."}",
+                'TemplateParam' => "{\"code\":".$code."}"
                 ],
             ];
             $result = AlibabaCloud::rpc()
@@ -39,7 +39,7 @@ class AliSMSController
                                 ->host('dysmsapi.aliyuncs.com')
                                 ->options($option)
                                 ->request();
-            // print_r($result->toArray());
+            print_r($result->toArray());
             return $result->toArray();
         } catch (ClientException $e) {
             // echo $e->getErrorMessage() . PHP_EOL;
