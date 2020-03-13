@@ -13,7 +13,8 @@ class UserValidate extends BaseValidate
      * @var array
      */	
 	protected $rule = [
-        'phone'=>'require|mobile'
+        'phone'=>'require|mobile',
+        'code'=>'require|number|length:4|isPerfectCode', // isPerfectCode为自定义方法，验证当前的验证码和发给用户的验证码是否相同。
     ];
     
     /**
@@ -29,6 +30,9 @@ class UserValidate extends BaseValidate
 
     // 配置场景
     protected $scene = [
-        'sendCode'=>['phone']
+        // 发送验证码
+        'sendCode'=>['phone'],
+        // 手机号登录
+        'phoneLogin'=>['phone', 'code']
     ];
 }

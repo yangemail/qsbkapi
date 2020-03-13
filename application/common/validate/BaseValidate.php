@@ -29,4 +29,18 @@ class BaseValidate extends Validate {
         return true;
     }
 
+    // 验证码验证
+    protected function isPerfectCode($value, $rule='', $data='', $field='') {
+        $oldCode = cache($data['phone']);
+        // 验证码不存在
+        if(!$oldCode) {
+            return "请重新获取验证码";
+        }
+        // 验证码验证
+        if($value != $oldCode) {
+            return "验证码错误";
+        }
+        return true;
+    }
+
 }

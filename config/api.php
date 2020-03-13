@@ -14,6 +14,6 @@ return[
         'SignName'=>'', //'<YourSignName>',
         'TemplateCode'=>'', //'<YourTemplateCode>',
         // 验证码有效期，验证码发送时间间隔（60秒）
-        'expire'=>10, // default: 60
+        'expire'=>30, // default: 60
     ],
 ];

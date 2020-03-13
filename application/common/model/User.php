@@ -8,8 +8,11 @@ use think\facade\Cache;
 use app\lib\exception\BaseException;
 use app\common\controller\AliSMSController;
 
-class UserModel extends Model
+class User extends Model
 {
+    // 自动写入时间，数据表必须有一个列命名为create_time
+    protected $autoWriteTimestamp = true;
+
     //发送验证码
     public function sendCode() {
         // 获取用户提交的手机号码
@@ -41,5 +44,46 @@ class UserModel extends Model
         }
         // 发送失败
         throw new BaseException(['code'=>200, 'msg'=>'发送失败', 'errorCode'=>30004]);
+    }
+
+    // 绑定用户信息表（模型关联：一对一）
+    public function userinfo() {
+        return $this->hasOne('Userinfo');
+    }
+
+    // 判断用户是否存在
+    public function isExist($arr=[]) {
+        if(!is_array($arr)) {
+            return false;
+        }
+        if(array_key_exists('phone', $arr)) { // 手机号码
+            $user = $this->where('phone', $arr['phone'])->find();
+            \halt($user);
+            return $user;
+        }
+        return false;
+    }
+
+    // 手机登录
+    public function phoneLogin() {
+        // 获取所有参数
+        $param = request()->param();
+        // 验证用户是否存在
+        $user = $this->isExist(['phone'=>$param['phone']]);
+        // 用户不存在，直接注册
+        if(!$user) {
+            // 用户主表
+            $user = self::create([
+                'username'=>$param['phone'],
+                'phone'=>$param['phone'],
+                // 'password'=>password_hash($param['phone'], PASSWORD_DEFAULT)
+            ]);
+            // 在用户信息表创建对应的记录（用户存放"用户其他信息"，即：userinfo表）
+            // user id就是上面创建好之后返回来的user id.
+            $user->userinfo()->create(['user_id'=>$user->id]);
+            return $this->CreateSaveToken($user->toArray());
+        }
+        // 用户是否被禁用
+        $this->checkStatus($user->toArray());
     }
 }
