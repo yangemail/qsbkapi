@@ -58,7 +58,7 @@ class User extends Model
         }
         if(array_key_exists('phone', $arr)) { // 手机号码
             $user = $this->where('phone', $arr['phone'])->find();
-            \halt($user);
+            // \halt($user);
             return $user;
         }
         return false;
@@ -76,7 +76,7 @@ class User extends Model
             $user = self::create([
                 'username'=>$param['phone'],
                 'phone'=>$param['phone'],
-                // 'password'=>password_hash($param['phone'], PASSWORD_DEFAULT)
+                'password'=>password_hash($param['phone'], PASSWORD_DEFAULT) // 为了测试方便，暂时使用现在的手机号作为密码
             ]);
             // 在用户信息表创建对应的记录（用户存放"用户其他信息"，即：userinfo表）
             // user id就是上面创建好之后返回来的user id.
@@ -85,5 +85,32 @@ class User extends Model
         }
         // 用户是否被禁用
         $this->checkStatus($user->toArray());
+        // 登陆成功，返回token
+        return $this->CreateSaveToken($user->toArray());
+    }
+
+    // 生成并保存token
+    public function CreateSaveToken($arr=[]) {
+        // 生成token
+        $token = sha1(md5(uniqid(md5(microtime(true)),true)));
+        $arr['token'] = $token;
+        // 登录过期时间
+        // $expire = array_key_exists('expire_in', $arr) ? $arr['expire_in'] : config('api.token_expire');
+        // 保存到缓存中
+        // if(!Cache::set($token, $arr, $expire)) {
+        if(!Cache::set($token, $arr, config('api.token_expire'))) { // 暂时注释掉上面的代码，默认缓存过期时间为0，0代表缓存永远都不会过期
+            // 如果设置缓存不成功抛出异常
+            throw new BaseException();
+        }
+        // 返回token
+        return $token;
+    }
+
+    public function checkStatus($arr) {
+        $status = $arr['status'];
+        if($status == 0) {
+            throw new BaseException(['code'=>200, 'msg'=>'该用户已被禁用', 'errorCode'=>20001]);
+            return $arr;
+        }
     }
 }
